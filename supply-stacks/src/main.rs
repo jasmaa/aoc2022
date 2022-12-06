@@ -38,12 +38,12 @@ impl Crates {
     }
 }
 
-struct CrateMover9000 {
-    crates: Crates,
+struct CrateMover9000<'a> {
+    crates: &'a mut Crates,
 }
 
-impl CrateMover9000 {
-    fn new(crates: Crates) -> CrateMover9000 {
+impl<'a> CrateMover9000<'a> {
+    fn new(crates: &'a mut Crates) -> CrateMover9000<'a> {
         CrateMover9000 { crates: crates }
     }
 
@@ -55,12 +55,12 @@ impl CrateMover9000 {
     }
 }
 
-struct CrateMover9001 {
-    crates: Crates,
+struct CrateMover9001<'a> {
+    crates: &'a mut Crates,
 }
 
-impl CrateMover9001 {
-    fn new(crates: Crates) -> CrateMover9001 {
+impl<'a> CrateMover9001<'a> {
+    fn new(crates: &'a mut Crates) -> CrateMover9001 {
         CrateMover9001 { crates: crates }
     }
 
@@ -113,21 +113,25 @@ fn main() {
         }
     }
     let crates = Crates::new(crate_lines);
-    let mut crate_mover_9000 = CrateMover9000::new(crates.clone());
+
+    let mut crate_mover_9000_crates = crates.clone();
+    let mut crate_mover_9000 = CrateMover9000::new(&mut crate_mover_9000_crates);
     for ins in &instructions {
         crate_mover_9000.execute(ins);
     }
-    let mut crate_mover_9001 = CrateMover9001::new(crates.clone());
+
+    let mut crate_mover_9001_crates = crates.clone();
+    let mut crate_mover_9001 = CrateMover9001::new(&mut crate_mover_9001_crates);
     for ins in &instructions {
         crate_mover_9001.execute(ins);
     }
 
     println!(
         "Top crates using CraneMover9000: {}",
-        crate_mover_9000.crates.top().join("")
+        crate_mover_9000_crates.top().join("")
     );
     println!(
         "Top crates using CraneMover9001: {}",
-        crate_mover_9001.crates.top().join("")
+        crate_mover_9001_crates.top().join("")
     );
 }
