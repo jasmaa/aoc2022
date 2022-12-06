@@ -38,41 +38,37 @@ impl Crates {
     }
 }
 
-struct CrateMover9000<'a> {
-    crates: &'a mut Crates,
-}
+struct CrateMover9000 {}
 
-impl<'a> CrateMover9000<'a> {
-    fn new(crates: &'a mut Crates) -> CrateMover9000<'a> {
-        CrateMover9000 { crates: crates }
+impl CrateMover9000 {
+    fn new() -> CrateMover9000 {
+        CrateMover9000 {}
     }
 
-    fn execute(&mut self, ins: &Instruction) {
+    fn execute(&self, crates: &mut Crates, ins: &Instruction) {
         for _ in 0..ins.quantity {
-            let v = self.crates.stacks[ins.from].pop().unwrap();
-            self.crates.stacks[ins.to].push(v);
+            let v = crates.stacks[ins.from].pop().unwrap();
+            crates.stacks[ins.to].push(v);
         }
     }
 }
 
-struct CrateMover9001<'a> {
-    crates: &'a mut Crates,
-}
+struct CrateMover9001 {}
 
-impl<'a> CrateMover9001<'a> {
-    fn new(crates: &'a mut Crates) -> CrateMover9001 {
-        CrateMover9001 { crates: crates }
+impl CrateMover9001 {
+    fn new() -> CrateMover9001 {
+        CrateMover9001 {}
     }
 
-    fn execute(&mut self, ins: &Instruction) {
+    fn execute(&self, crates: &mut Crates, ins: &Instruction) {
         let mut buffer = Vec::new();
         for _ in 0..ins.quantity {
-            let v = self.crates.stacks[ins.from].pop().unwrap();
+            let v = crates.stacks[ins.from].pop().unwrap();
             buffer.push(v);
         }
         while buffer.len() > 0 {
             let v = buffer.pop().unwrap();
-            self.crates.stacks[ins.to].push(v);
+            crates.stacks[ins.to].push(v);
         }
     }
 }
@@ -115,15 +111,15 @@ fn main() {
     let crates = Crates::new(crate_lines);
 
     let mut crate_mover_9000_crates = crates.clone();
-    let mut crate_mover_9000 = CrateMover9000::new(&mut crate_mover_9000_crates);
+    let crate_mover_9000 = CrateMover9000::new();
     for ins in &instructions {
-        crate_mover_9000.execute(ins);
+        crate_mover_9000.execute(&mut crate_mover_9000_crates, ins);
     }
 
     let mut crate_mover_9001_crates = crates.clone();
-    let mut crate_mover_9001 = CrateMover9001::new(&mut crate_mover_9001_crates);
+    let crate_mover_9001 = CrateMover9001::new();
     for ins in &instructions {
-        crate_mover_9001.execute(ins);
+        crate_mover_9001.execute(&mut crate_mover_9001_crates, ins);
     }
 
     println!(
